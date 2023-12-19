@@ -5,7 +5,12 @@
 */
 
 function isAnagram(str1, str2) {
-
+  let x=[...str1].map((item) => item.toLowerCase())
+  x = x.sort().join('')
+  let y=[...str2].map((item) => item.toLowerCase())
+  y = y.sort().join('')
+  let result = (x === y)?true:false
+     return result
 }
 
 module.exports = isAnagram;

@@ -4,7 +4,13 @@
 */
 
 function isPalindrome(str) {
-  return true;
+  let newstr = str.trim().split(" ").join("").toLowerCase().replace(/['!"#$%&\\'()\*+,\-\.\/:;<=>?@\[\\\]\^_`{|}~']/g,"")
+  let reverse = ""
+  for(let i = newstr.length - 1; i >=0; i-- ){
+      reverse += newstr[i]
+  }
+  result = (reverse == newstr)?true:false
+  return result;
 }
 
 module.exports = isPalindrome;

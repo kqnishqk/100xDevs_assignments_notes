@@ -3,6 +3,15 @@
 */
 
 function wait(n) {
+    let p = new Promise(function(resolve){
+        console.log(`in promise right now, it will be resolved after ${n} seconds.`);
+        setTimeout(resolve,n * 1000,"promise resolved")
+    })
+    return p
 }
 
-module.exports = wait;
+const prompt = require('prompt-sync')()
+let input = parseInt(prompt('enter input:'))
+wait(input).then(function(value){
+    console.log(value);
+})

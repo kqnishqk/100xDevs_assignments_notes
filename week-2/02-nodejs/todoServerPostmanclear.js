@@ -41,15 +41,15 @@
  */
   const express = require('express');
   const uuid = require('uuid');
-//   const port = 3000
+  const port = 3000
 
   const bodyParser = require('body-parser');
   
   const app = express();
   app.use(bodyParser.json());
 
-//   let allTodos = [{id:2},{id:3},{id:4}]
-  let allTodos = []
+  let allTodos = [{id:2},{id:3},{id:4}]
+  // let allTodos = []
 
   app.get('/todos',(req, res) => {
     res.status(200).send(JSON.stringify(allTodos))
@@ -103,36 +103,27 @@
   });
 
 
-  // app.delete('/todos/:id',(req, res) => {
-  //   let existingId = parseInt(req.params.id)
-  //   let delIndex = allTodos.findIndex(element => element['id'] === existingId);
+  app.delete('/todos/:id',(req, res) => {
+    let existingId = req.params.id;
+    
+    let delIndex = allTodos.findIndex(element => element['id'] == existingId);
   
-  //   if (delIndex === -1) {
-  //     res.status(404).send("item not found");
-  //   } 
-  //   else {
-  //     allTodos.splice(delIndex, 1);
-  //     res.status(200).send("item deleted successfully");
-  //   }
-  // })
-  app.delete('/todos/:id', (req, res) => {
-    const todoIndex = allTodos.findIndex(t => t.id === parseInt(req.params.id));
-    if (todoIndex === -1) {
-      res.status(404).send();
-    } else {
-      todos.splice(todoIndex, 1);
-      res.status(200).send();
+    if (delIndex === -1) {
+      res.status(404).send("item not found");
+    } 
+    else {
+      allTodos.splice(delIndex, 1);
+      res.status(200).send(`item deleted successfully`);
     }
-  });
+  })
 
 
   app.use((req, res, next) => {
     res.status(404).send("Sorry can't find that!");
   });
 
-
-//   app.listen(port, () => {
-//     console.log(`Example app listening on port ${port}`)
-//   })
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
   
   module.exports = app;

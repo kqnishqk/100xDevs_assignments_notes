@@ -12,10 +12,57 @@
     - For any other route not defined in the server return 404
     Testing the server - run `npm run test-fileServer` command in terminal
  */
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const app = express();
-
-
-module.exports = app;
+    const express = require('express');
+    const fs = require('fs');
+    const path = require('path');
+    const app = express();
+    // const port = 3000
+    const fileDirectory = "./files"
+    
+    app.get('/files', (req,res) => {
+      fs.readdir(fileDirectory,'utf-8',(err,data) => {
+        if(err){
+          console.error(err)
+          return res.status(500).send("error accessing files directory")
+        }
+        res.status(200).send(JSON.stringify(data))
+      })
+    })
+    
+    
+    app.get('/file/:filename', (req, res) => {
+      
+      let p = new Promise(function(resolve){
+        let fileFound = false;
+        fs.readdir(fileDirectory, 'utf-8', (err, data) => {
+          let nameOfFile = req.params.filename
+          
+          data.forEach(file => {
+            if (file === nameOfFile){
+              fileFound = true
+              let filePath = path.join(fileDirectory, nameOfFile);
+              fs.readFile(filePath, 'utf-8', (err, fileData) => {
+                resolve(fileData)
+              });
+            }
+          });
+          if(!fileFound){
+            res.status(404).send('File not found')
+          }
+        })
+      });
+      p.then(function(value){
+        res.status(200).send(value)
+      })
+    });
+    
+    
+    app.use((req, res, next) => {
+      res.status(404).send("Route not found");
+    });
+    
+    // app.listen(port,() => {
+    //   console.log(`Example app listening on port ${port}`)
+    // } )
+    
+    module.exports = app;

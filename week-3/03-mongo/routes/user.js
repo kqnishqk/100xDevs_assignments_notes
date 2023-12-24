@@ -37,11 +37,11 @@ app.get('/courses', (req, res) => {
     })
 });
 
-app.post('/courses/:courseId', userMiddleware, (req, res) => {
+app.post('/courses/:courseId', userMiddleware, async function(req, res){
     // Implement course purchase logic
     let givenCourseId = req.params.courseId 
 
-    User.findOneAndUpdate({username: req.headers.username, password: req.headers.password}, {$push: {courses: givenCourseId}});
+    let userUpdation = await User.findOneAndUpdate({username: req.headers.username, password: req.headers.password}, {$push: {courses: givenCourseId}});
     res.status(200).json({
         message: 'Course purchased successfully'
     })
@@ -53,7 +53,7 @@ app.get('/purchasedCourses', userMiddleware, (req, res) => {
         .then(user =>  {
             let purchCourseIds = user.courses
             let infopurchCourseIds = []
-            purchCourseIds.array.forEach(element => {
+            purchCourseIds.forEach(element => {
                 Course.findOne({courseId: element})
                     .then(neededCourse =>{
                         infopurchCourseIds.push(neededCourse)

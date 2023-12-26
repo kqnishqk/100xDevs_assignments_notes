@@ -1,11 +1,12 @@
 const { Router } = require("express");
-const router = Router();
 const userMiddleware = require("../middleware/user");
+const router = Router();
 const jwt = require('jsonwebtoken');
 const jwtPassword = 'secret';
+const { Adminjwt, Userjwt, Coursejwt } = require('../db/index');
 
 // User Routes
-app.post('/signup', (req, res) => {
+router.post('/signup', (req, res) => {
     // Implement user signup logic
     let nameOfUser = req.body.username
     let passOfUser = req.body.password
@@ -27,7 +28,7 @@ app.post('/signup', (req, res) => {
         })
 });
 
-app.post('/signin', async function(req, res){
+router.post('/signin', async function(req, res){
     // Implement user signin logic
     let nameOfUser = req.body.username
     let passOfUser = req.body.password
@@ -45,7 +46,7 @@ app.post('/signin', async function(req, res){
         }
 });
 
-app.get('/courses',userMiddleware, (req, res) => {
+router.get('/courses',userMiddleware, (req, res) => {
     // Implement listing all courses logic
     Coursejwt.find({})
     .then(documents => {
@@ -55,7 +56,7 @@ app.get('/courses',userMiddleware, (req, res) => {
     })
 });
 
-app.post('/courses/:courseId', userMiddleware, async function(req, res){
+router.post('/courses/:courseId', userMiddleware, async function(req, res){
     // Implement course purchase logic
     let givenCourseId = req.params.courseId 
 
@@ -65,7 +66,7 @@ app.post('/courses/:courseId', userMiddleware, async function(req, res){
     })
 });
 
-app.get('/purchasedCourses', userMiddleware, (req, res) => {
+router.get('/purchasedCourses', userMiddleware, (req, res) => {
     // Implement fetching purchased courses logic
     Userjwt.findOne({username: req.username})
     .then(user =>  {
@@ -82,3 +83,5 @@ app.get('/purchasedCourses', userMiddleware, (req, res) => {
         })
     })
 });
+
+module.exports = router;

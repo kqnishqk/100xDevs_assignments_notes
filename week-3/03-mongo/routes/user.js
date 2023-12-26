@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 const userMiddleware = require("../middleware/user");
+const { Admin, User, Course } = require('../db/index');
 
 
 
@@ -64,3 +65,5 @@ app.get('/purchasedCourses', userMiddleware, (req, res) => {
             })
         })
 });
+
+module.exports = router;

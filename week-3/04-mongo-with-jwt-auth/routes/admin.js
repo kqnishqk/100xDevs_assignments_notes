@@ -3,9 +3,10 @@ const adminMiddleware = require("../middleware/admin");
 const router = Router();
 const jwt = require('jsonwebtoken');
 const jwtPassword = '$tr0ngP@$$w0rd';
+const { Adminjwt, Userjwt, Coursejwt } = require('../db/index');
 
 // Admin Routes
-app.post('/signup', async function(req, res){
+router.post('/signup', async function(req, res){
     // Implement admin signup logic
     let nameOfAdmin = req.body.username
     let passOfAdmin = req.body.password
@@ -26,7 +27,7 @@ app.post('/signup', async function(req, res){
         }
 });
 
-app.post('/signin', async function(req, res){
+router.post('/signin', async function(req, res){
     // Implement admin signup logic
     let nameOfAdmin = req.body.username
     let passOfAdmin = req.body.password
@@ -44,7 +45,7 @@ app.post('/signin', async function(req, res){
         }
 });
 
-app.post('/courses', adminMiddleware, (req, res) => {
+router.post('/courses', adminMiddleware, (req, res) => {
     // Implement course creation logic
     let entry = {
         title: req.body.title,
@@ -63,7 +64,7 @@ app.post('/courses', adminMiddleware, (req, res) => {
         })
 });
 
-app.get('/courses', adminMiddleware, (req, res) => {
+router.get('/courses', adminMiddleware, (req, res) => {
     // Implement fetching all courses logic
     Coursejwt.find({})
     .then(documents => {

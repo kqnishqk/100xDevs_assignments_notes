@@ -27,7 +27,8 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     courses:[{
-        type: Number
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
     }]
     
 });
@@ -53,11 +54,7 @@ const CourseSchema = new mongoose.Schema({
     published:{
         type: Boolean,
         required: true
-    },
-    courseId:{
-        type: Number,
-        required: true
-    } 
+    }
 });
 
 const Admin = mongoose.model('Admin', AdminSchema);

@@ -6,7 +6,7 @@ const { Admin, User, Course } = require('../db/index');
 
 
 // User Routes
-app.post('/signup', (req, res) => {
+router.post('/signup', (req, res) => {
     // Implement user signup logic
     let nameOfUser = req.body.username
     let passOfUser = req.body.password
@@ -28,9 +28,9 @@ app.post('/signup', (req, res) => {
         })
 });
 
-app.get('/courses', (req, res) => {
+router.get('/courses', (req, res) => {
     // Implement listing all courses logic
-    Course.find({})
+    Course.find({published: true})
     .then(documents => {
         res.status(200).json({
             courses: documents
@@ -38,32 +38,30 @@ app.get('/courses', (req, res) => {
     })
 });
 
-app.post('/courses/:courseId', userMiddleware, async function(req, res){
+router.post('/courses/:courseId', userMiddleware, async function(req, res){
     // Implement course purchase logic
     let givenCourseId = req.params.courseId 
 
-    let userUpdation = await User.findOneAndUpdate({username: req.headers.username, password: req.headers.password}, {$push: {courses: givenCourseId}});
-    res.status(200).json({
+    let userUpdation = await User.findOneAndUpdate(
+        {
+            username: req.headers.username, 
+            password: req.headers.password
+        }, 
+        {$push: {courses: givenCourseId}}
+    );
+    res.status(200).json({ 
         message: 'Course purchased successfully'
     })
 });
 
-app.get('/purchasedCourses', userMiddleware, (req, res) => {
+router.get('/purchasedCourses', userMiddleware, async (req, res) => {
     // Implement fetching purchased courses logic
-    User.findOne({username: req.headers.username, password: req.headers.password})
-        .then(user =>  {
-            let purchCourseIds = user.courses
-            let infopurchCourseIds = []
-            purchCourseIds.forEach(element => {
-                Course.findOne({courseId: element})
-                    .then(neededCourse =>{
-                        infopurchCourseIds.push(neededCourse)
-                    })
-            })
-            res.status(200).json({
-                purchasedCourses: infopurchCourseIds
-            })
-        })
+    const user = await User.findOne({username: req.headers.username, password: req.headers.password})
+    const courses = await Course.find({_id:{"$in": user.courses}})
+    res.status(200).json({
+        purchasedCourses: courses
+    })
+
 });
 
 module.exports = router;

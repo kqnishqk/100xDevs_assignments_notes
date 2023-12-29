@@ -2,13 +2,13 @@ const { Router } = require("express");
 const adminMiddleware = require("../middleware/admin");
 const router = Router();
 const jwt = require('jsonwebtoken');
-const jwtPassword = '$tr0ngP@$$w0rd';
+const {JWT_SECRET} = require('../config')
 const { Adminjwt, Userjwt, Coursejwt } = require('../db/index');
 
 // Admin Routes
 router.post('/signup', async function(req, res){
     // Implement admin signup logic
-    let nameOfAdmin = req.body.username
+    let nameOfAdmin = req.body.adminname
     let passOfAdmin = req.body.password
     let adminExists = await Adminjwt.findOne({adminname: nameOfAdmin})
         if(adminExists){
@@ -29,7 +29,7 @@ router.post('/signup', async function(req, res){
 
 router.post('/signin', async function(req, res){
     // Implement admin signup logic
-    let nameOfAdmin = req.body.username
+    let nameOfAdmin = req.body.adminname
     let passOfAdmin = req.body.password
     let adminExists = await Adminjwt.findOne({adminname: nameOfAdmin, password: passOfAdmin})
         if(!adminExists){
@@ -38,9 +38,11 @@ router.post('/signin', async function(req, res){
             })
         }
         else{
-            const token = jwt.sign({'adminname':nameOfAdmin},jwtPassword)
+            const token = jwt.sign({
+                nameOfAdmin
+            },JWT_SECRET)
             res.status(200).json({
-                token:token
+                token: 'Bearer ' + token
             })
         }
 });
@@ -51,15 +53,14 @@ router.post('/courses', adminMiddleware, (req, res) => {
         title: req.body.title,
         description: req.body.description,
         price: req.body.price,
-        imgLink: req.body.imageLink,
-        published: true,
-        courseId: Date.now()
+        imageLink: req.body.imageLink,
+        published: req.body.published,
     }
     Coursejwt.create(entry)
         .then(createdEntry => {
             res.status(200).json({
                 message: 'Course created successfully', 
-                courseId: createdEntry.courseId
+                courseId: createdEntry._id
             })
         })
 });

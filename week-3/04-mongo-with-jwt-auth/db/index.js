@@ -6,25 +6,54 @@ mongoose.connect('mongodb+srv://admin:12hellohello12@cluster0.plynh7s.mongodb.ne
 // Define schemas
 const AdminSchema = new mongoose.Schema({
     // Schema definition here
-    adminname: String,
-    password: String
+    adminname:{
+        type: String,
+        required: true
+    },
+    password:{
+        type: String,
+        required: true
+    }
 });
 
 const UserSchema = new mongoose.Schema({
     // Schema definition here
-    username: String,
-    password: String,
-    courses: [{type: Number}]
+    username:{
+        type: String,
+        required: true
+    },
+    password:{
+        type: String,
+        required: true
+    },
+    courses:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+    }]
 });
 
 const CourseSchema = new mongoose.Schema({
     // Schema definition here
-    title: String,
-    description: String,
-    price: Number,
-    imageLink: String,
-    published:Boolean,
-    courseId: Number
+    title:{
+        type: String,
+        required: true
+    },
+    description:{
+        type: String,
+        required: true
+    },
+    price:{
+        type: Number,
+        required: true
+    },
+    imageLink:{
+        type: String,
+        required: true
+    },
+    published:{
+        type: Boolean,
+        required: true
+    }
 });
 
 const Adminjwt = mongoose.model('Adminjwt', AdminSchema);

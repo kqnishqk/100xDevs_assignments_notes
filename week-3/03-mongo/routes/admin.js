@@ -6,12 +6,12 @@ const { Admin, User, Course } = require('../db/index');
 
 
 // Admin Routes
-app.post('/signup', (req, res) => {
+router.post('/signup', (req, res) => {
     // Implement admin signup logic
-    let nameOfAdmin = req.body.username
+    let nameOfAdmin = req.body.adminname
     let passOfAdmin = req.body.password
-    let findAdmin = Admin.find({adminname: nameOfAdmin}).exec()
-    findAdmin.then((adminExists) => {
+    Admin.findOne({adminname: nameOfAdmin})
+    .then((adminExists) => {
         if(adminExists){
             res.status(409).json({
                 mssg: ' this name already exists.'
@@ -22,8 +22,10 @@ app.post('/signup', (req, res) => {
                 adminname: nameOfAdmin,
                 password: passOfAdmin
             })
-            res.status(200).json({
-                mssg:'admin created successfully.'
+            .then(() => {
+                res.status(200).json({
+                    mssg:'admin created successfully.'
+                })
             })
         }
     }).catch((err) => {
@@ -35,26 +37,25 @@ app.post('/signup', (req, res) => {
     })
 });
 
-app.post('/courses', adminMiddleware, (req, res) => {
+router.post('/courses', adminMiddleware, (req, res) => {
     // Implement course creation logic
     let entry = {
         title: req.body.title,
         description: req.body.description,
         price: req.body.price,
-        imgLink: req.body.imageLink,
+        imageLink: req.body.imageLink,
         published: true,
-        courseId: Date.now()
     }
     Course.create(entry)
         .then(createdEntry => {
             res.status(200).json({
                 message: 'Course created successfully', 
-                courseId: createdEntry.courseId
+                courseId: createdEntry._id
             })
         })
 });
 
-app.get('/courses', adminMiddleware, (req, res) => {
+router.get('/courses', adminMiddleware, (req, res) => {
    // Implement fetching all courses logic
    Course.find({})
     .then(documents => {

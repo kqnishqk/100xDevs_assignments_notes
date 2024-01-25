@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>
+    let globalId = 0
+
+    function removeById(Id){
+        let todosDOM = document.getElementById("todos")
+        element = document.getElementById(Id)
+        todosDOM.removeChild(element)
+    }
+
+    function addTodo() {
+
+      let todosDOM = document.getElementById("todos")
+
+      const todo = document.createElement("div")
+      let id = globalId++
+      todo.setAttribute('id',id )
+
+      const title = document.createElement("div")
+      title.innerHTML = document.getElementById("title").value;
+
+      const description = document.createElement("div")
+      description.innerHTML = document.getElementById("description").value;
+
+      const markAsDone = document.createElement("button")
+      markAsDone.setAttribute("onclick",`removeById(${id})`)
+      markAsDone.innerHTML = "Mark As Done"
+
+      todo.appendChild(title)
+      todo.appendChild(description)
+      todo.appendChild(markAsDone)
+
+
+      todosDOM.appendChild(todo)
+
+    }
+  </script>
+</head>
+
+<body>
+  <input type="text" id="title" placeholder="Todo title"></input> <br /><br />
+  <input type="text" id="description" placeholder="Todo description"></input> <br /><br />
+  <button onclick="addTodo()">Add todo</button>
+  <br /> <br />
+
+  <div id="todos">
+
+  </div>
+</body>
+
+</html>

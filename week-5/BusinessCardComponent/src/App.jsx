@@ -1,35 +1,25 @@
-export function BusinessCard(props) {
-    return (
-      <div style={styles.card}>
-        <h2 style={styles.name}>{props.name}</h2>
-        <p style={styles.description}>{props.description}</p>
-        <h3 style={styles.interestsHeader}>Interests</h3>
-        <ul style={styles.interestsList}>
-          {props.interests.map((interest) => (
-            <li key={interest} style={styles.interestItem}>
-              {interest}
-            </li>
-          ))}
-        </ul>
-        <div style={styles.socialLinks}>
-          <a href={props.linkedin} target="_blank" rel="noopener noreferrer" style={{...styles.link, marginLeft: '0px'}}>
-            LinkedIn
-          </a>
-          <br />
-          <a href={props.twitter} target="_blank" rel="noopener noreferrer" style={styles.link}>
-            Twitter
-          </a>
-          {props.otherSocialMedia && (
-            <a href={props.otherSocialMedia} target="_blank" rel="noopener noreferrer" style={styles.link}>
-              {props.otherSocialMedia.label}
-            </a>
-          )}
-        </div>
-      </div>
-    );
-  }
+import { useState } from 'react'
+
+import './App.css'
+
+function App() {
+  const [name, setName] = useState("kanishak")
+  const [description, setDescription] = useState("a student of 100xDevs")
+  const [interests, setInterests] = useState(['playing chess', 'listening podcasts'])
+  const [linkedin, setLinkedIn] = useState("somerandomlink")
+  const [twitter, setTwitter] = useState("anotherrandomlink")
   
-  // Styles
+
+  return (
+    <>
+      <div>
+        <ComponentBusinessCard name = {name} description= {description} interests = {interests} linkedin ={linkedin} twitter={twitter}></ComponentBusinessCard>
+      </div>
+    </>
+  )
+}
+
+function ComponentBusinessCard(props){
   const styles = {
     card: {
       border: '1px solid #ddd',
@@ -58,7 +48,6 @@ export function BusinessCard(props) {
       textDecoration: 'none',
       color: '#fff', // Text color
       padding: '10px 15px', // Padding for the button
-      border: '1px solid #ddd',
       borderRadius: '5px', // Border radius for rounded corners
       backgroundColor: '#007BFF', // Background color for the button
       display: 'inline-block', // Display as inline-block to be side by side
@@ -80,4 +69,26 @@ export function BusinessCard(props) {
       marginBottom: '5px',
       color: '#555',
     },
-  };
+  }
+  
+  return <div style={styles.card}>
+    <h1 style={styles.name}>{props.name}</h1>
+    <p style={styles.description}>{props.description}</p>
+    <h3 style={styles.interestsHeader}>Interests</h3>
+    <ul style={styles.interestsList}>
+      {props.interests.map((interest) => (
+        <li key={interest} style={styles.interestItem}>
+          {interest}
+        </li>
+      ))}
+    </ul>
+    <div style={styles.socialLinks}>
+        <a href={props.linkedin} style={styles.link}>LinkedIn</a>
+        <a href={props.twitter} style={styles.link}>Twitter</a>
+    </div>
+  </div>
+
+    
+}
+
+export default App
